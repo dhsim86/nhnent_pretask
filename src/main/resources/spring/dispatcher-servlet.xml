@@ -17,8 +17,6 @@
 
     <annotation-driven />
 
-
-
     <beans:bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 
         <beans:property name="prefix" value="/jsp/" />
