@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="nhn_pretask:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="pretask.war">
+      <element id="artifact" artifact-name="nhn_pretask:war exploded" />
+    </root>
+  </artifact>
+</component>
