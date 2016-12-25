@@ -36,12 +36,11 @@ public class FileUploadServlet extends HttpServlet
 
         try
         {
-            String contextRootPath =
-                    this.getServletContext().getRealPath("/");
+            String contextRootPath = this.getServletContext().getRealPath("/");
 
             DiskFileItemFactory diskFactory = new DiskFileItemFactory();
             diskFactory.setRepository(
-                    new File(contextRootPath + "/WEB-INF/temp")
+                    new File(contextRootPath + "/WEB-INF")
             );
             ServletFileUpload upload = new ServletFileUpload(diskFactory);
 
@@ -90,6 +89,7 @@ public class FileUploadServlet extends HttpServlet
         out.println("File name: " + fileName + "<BR>");
         out.println("Content Type: " + contentType + "<BR>");
         out.println("File Size: " + fileSize + "<BR>");
+        System.out.println(uploadedFileName);
         out.println("<IMG SRC='upload/" + uploadedFileName + "' width='300'><BR>");
         out.println("</P>");
     }
