@@ -4,6 +4,8 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
+    <!--- Configuration for default. -->
+
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath:spring/*-context.xml</param-value>
@@ -14,18 +16,29 @@
     </listener>
 
     <servlet>
-        <servlet-name>action</servlet-name> <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class> <init-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>classpath:spring/*-servlet.xml</param-value>
-    </init-param>
+        <servlet-name>action</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:spring/*-servlet.xml</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
+
     <servlet-mapping>
         <servlet-name>action</servlet-name>
         <url-pattern>*.do</url-pattern>
     </servlet-mapping>
+
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
+
+        <!--- Configuration for lesson. -->
+        <welcome-file>index.html</welcome-file>
+        <welcome-file>index.htm</welcome-file>
+        <welcome-file>default.html</welcome-file>
+        <welcome-file>default.htm</welcome-file>
+
     </welcome-file-list>
 
 
@@ -43,5 +56,30 @@
         <filter-name>encodingFilter</filter-name>
         <url-pattern>*.do</url-pattern>
     </filter-mapping>
+
+    <!--- Configuration for lesson. -->
+
+    <servlet>
+        <servlet-name>Hello</servlet-name>
+        <servlet-class>lesson.Lesson03.HelloWorld</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Hello</servlet-name>
+        <url-pattern>/Hello</url-pattern>
+    </servlet-mapping>
+
+    <!--
+        <servlet>
+            <servlet-name>Calculator</servlet-name>
+            <servlet-class>lesson.Lesson03.CalculatorServlet</servlet-class>
+        </servlet>
+
+
+        <servlet-mapping>
+            <servlet-name>Calculator</servlet-name>
+            <url-pattern>/Calculator</url-pattern>
+        </servlet-mapping>
+    -->
 
 </web-app>
