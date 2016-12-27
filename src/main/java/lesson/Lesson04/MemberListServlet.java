@@ -48,8 +48,12 @@ public class MemberListServlet extends GenericServlet
             response.setContentType("text/html; charset=UTF-8");
 
             PrintWriter out = response.getWriter();
+
             out.println("<html><head><title>User list</title></head>");
             out.println("<body><h1>User list</h1>");
+
+            out.println("<P><a href='add'>New user</a></p>");
+
 
             while (rs.next())
             {
