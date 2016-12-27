@@ -41,7 +41,6 @@
 
     </welcome-file-list>
 
-
     <filter>
         <filter-name>encodingFilter</filter-name>
         <filter-class>
