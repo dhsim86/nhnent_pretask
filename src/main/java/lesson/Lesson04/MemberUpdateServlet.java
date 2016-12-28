@@ -3,8 +3,13 @@ package lesson.Lesson04;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebInitParam;
 import javax.servlet.annotation.WebServlet;
@@ -41,12 +46,13 @@ public class MemberUpdateServlet extends HttpServlet
 
         try
         {
-            Class.forName(this.getInitParameter("driver"));
+            ServletContext sc = this.getServletContext();
+            Class.forName(sc.getInitParameter("driver"));
 
             conn = DriverManager.getConnection(
-                    this.getInitParameter("url"),
-                    this.getInitParameter("username"),
-                    this.getInitParameter("password"));
+                    sc.getInitParameter("url"),
+                    sc.getInitParameter("username"),
+                    sc.getInitParameter("password"));
             stmt = conn.createStatement();
 
             rs = stmt.executeQuery(
@@ -68,6 +74,8 @@ public class MemberUpdateServlet extends HttpServlet
                         rs.getString("EMAIL") + "'><br>");
             out.println("register date: " + rs.getDate("CRE_DATE") + "<br>");
             out.println("<input type='submit' value='save'>");
+            out.println("<input type='button' value='delete'" +
+                        " onclick=\"location.href='delete?no=" + request.getParameter("no") + "';\">");
             out.println("<input type='button' value='cancel'" +
                         " onclick='location.href=\"list\"'>");
             out.println("</form>");
@@ -101,12 +109,13 @@ public class MemberUpdateServlet extends HttpServlet
 
         try
         {
-            Class.forName(this.getInitParameter("driver"));
+            ServletContext sc = this.getServletContext();
+            Class.forName(sc.getInitParameter("driver"));
 
             conn = DriverManager.getConnection(
-                    this.getInitParameter("url"),
-                    this.getInitParameter("username"),
-                    this.getInitParameter("password"));
+                    sc.getInitParameter("url"),
+                    sc.getInitParameter("username"),
+                    sc.getInitParameter("password"));
             stmt = conn.prepareStatement(
                     "update MEMBERS set EMAIL=?, MNAME=?, MOD_DATE=now()" +
                     " where MNO=?");
@@ -127,6 +136,8 @@ public class MemberUpdateServlet extends HttpServlet
         }
         finally
         {
+            try { if (stmt != null) stmt.close(); } catch(Exception e) {}
+            try { if (conn != null) conn.close(); } catch(Exception e) {}
         }
     }
 }
