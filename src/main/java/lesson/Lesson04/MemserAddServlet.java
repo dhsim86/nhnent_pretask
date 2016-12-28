@@ -80,6 +80,10 @@ public class MemserAddServlet extends HttpServlet
         }
         catch (Exception e)
         {
+            for (StackTraceElement element : e.getStackTrace())
+            {
+                System.out.println(element.toString());
+            }
             throw new ServletException(e);
         }
         finally

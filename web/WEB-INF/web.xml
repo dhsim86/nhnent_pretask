@@ -80,5 +80,34 @@
             <url-pattern>/Calculator</url-pattern>
         </servlet-mapping>
     -->
+    <servlet>
+        <servlet-name>MemberUpdateServlet</servlet-name>
+        <servlet-class>lesson.Lesson04.MemberUpdateServlet</servlet-class>
+
+        <init-param>
+            <param-name>driver</param-name>
+            <param-value>com.mysql.jdbc.Driver</param-value>
+        </init-param>
+
+        <init-param>
+            <param-name>url</param-name>
+            <param-value>jdbc:mysql://localhost/studydb</param-value>
+        </init-param>
+
+        <init-param>
+            <param-name>username</param-name>
+            <param-value>study</param-value>
+        </init-param>
+
+        <init-param>
+            <param-name>password</param-name>
+            <param-value>study</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>MemberUpdateServlet</servlet-name>
+        <url-pattern>/member/update</url-pattern>
+    </servlet-mapping>
 
 </web-app>
