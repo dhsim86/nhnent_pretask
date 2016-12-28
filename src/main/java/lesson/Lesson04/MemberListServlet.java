@@ -8,22 +8,23 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-import javax.servlet.GenericServlet;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by dongho on 12/27/16.
  */
 @WebServlet("/member/list")
-public class MemberListServlet extends GenericServlet
+public class MemberListServlet extends HttpServlet
 {
     private static final long serialVersionUID = 1L;
 
     @Override
-    public void service(ServletRequest request, ServletResponse response)
+    public void doGet(
+        HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
         Connection conn = null;
@@ -32,18 +33,21 @@ public class MemberListServlet extends GenericServlet
 
         try
         {
-            DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+            ServletContext sc = this.getServletContext();
+
+            Class.forName(sc.getInitParameter("driver"));
 
             conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost/studydb",
-                    "study", "study");
+                    sc.getInitParameter("url"),
+                    sc.getInitParameter("username"),
+                    sc.getInitParameter("password"));
 
             stmt = conn.createStatement();
 
             rs = stmt.executeQuery(
                     "select MNO, MNAME, EMAIL, CRE_DATE" +
-                         " from MEMBERS" +
-                         " order by MNO ASC");
+                            " from MEMBERS" +
+                            " order by MNO ASC");
 
             response.setContentType("text/html; charset=UTF-8");
 
@@ -54,14 +58,18 @@ public class MemberListServlet extends GenericServlet
 
             out.println("<P><a href='add'>New user</a></p>");
 
-
             while (rs.next())
             {
                 out.println(
-                    rs.getInt("MNO") + ", " +
-                    rs.getString("MNAME") + ", " +
-                    rs.getString("EMAIL") + ", " +
-                    rs.getDate("CRE_DATE") + "<br>"
+                        "<a href='update?no=" +
+                            rs.getInt("MNO") + " " +
+                        "'>" +
+                        rs.getString("MNAME") + "</a>," +
+                        rs.getString("EMAIL") + ", " +
+                        rs.getDate("CRE_DATE") + ", " +
+                        "<a href='delete?no=" +
+                            rs.getInt("MNO") + " " +
+                        "'>" + "[Delete]" + "</a>" + "<br>"
                 );
             }
 

@@ -11,6 +11,26 @@
         <param-value>classpath:spring/*-context.xml</param-value>
     </context-param>
 
+    <context-param>
+        <param-name>driver</param-name>
+        <param-value>com.mysql.jdbc.Driver</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>url</param-name>
+        <param-value>jdbc:mysql://localhost/studydb?useUnicode=true&amp;characterEncoding=utf8</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>username</param-name>
+        <param-value>study</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>password</param-name>
+        <param-value>study</param-value>
+    </context-param>
+
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
@@ -80,5 +100,62 @@
             <url-pattern>/Calculator</url-pattern>
         </servlet-mapping>
     -->
+    <servlet>
+        <servlet-name>MemberUpdateServlet</servlet-name>
+        <servlet-class>lesson.Lesson04.MemberUpdateServlet</servlet-class>
+
+        <!--
+        <init-param>
+            <param-name>driver</param-name>
+            <param-value>com.mysql.jdbc.Driver</param-value>
+        </init-param>
+
+        <init-param>
+            <param-name>url</param-name>
+            <param-value>jdbc:mysql://localhost/studydb</param-value>
+        </init-param>
+
+        <init-param>
+            <param-name>username</param-name>
+            <param-value>study</param-value>
+        </init-param>
+
+        <init-param>
+            <param-name>password</param-name>
+            <param-value>study</param-value>
+        </init-param>
+        -->
+
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>MemberUpdateServlet</servlet-name>
+        <url-pattern>/member/update</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>MemberDeleteServlet</servlet-name>
+        <servlet-class>lesson.Lesson04.MemberDeleteServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>MemberDeleteServlet</servlet-name>
+        <url-pattern>/member/delete</url-pattern>
+    </servlet-mapping>
+
+    <filter>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <filter-class>lesson.Lesson04.CharacterEncodingFilter</filter-class>
+
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
 </web-app>
