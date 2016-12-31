@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -30,6 +31,10 @@ public class MemserAddServlet extends HttpServlet
     {
         response.setContentType("text/html; charset=UTF-8");
 
+        RequestDispatcher rd = request.getRequestDispatcher(
+              "/lesson/lesson05/member/MemberForm.jsp");
+        rd.forward(request, response);
+        /*
         PrintWriter out = response.getWriter();
         out.println("<html><head><title>Register user</title></head>");
         out.println("<body><h1>Register user</h1>");
@@ -41,7 +46,7 @@ public class MemserAddServlet extends HttpServlet
         out.println("<input type='submit' value='add'>");
         out.println("<input type='reset', value='cancel'>");
         out.println("</form>");
-        out.println("</body></html>");
+        out.println("</body></html>");*/
     }
 
     @Override
@@ -55,12 +60,7 @@ public class MemserAddServlet extends HttpServlet
         try
         {
             ServletContext sc = this.getServletContext();
-
-            Class.forName(sc.getInitParameter("driver"));
-            conn = DriverManager.getConnection(
-                    sc.getInitParameter("url"),
-                    sc.getInitParameter("username"),
-                    sc.getInitParameter("password"));
+            conn = (Connection) sc.getAttribute("conn");
 
             stmt = conn.prepareStatement(
                     "insert into MEMBERS (EMAIL, PWD, MNAME, CRE_DATE, MOD_DATE)" +
@@ -83,16 +83,19 @@ public class MemserAddServlet extends HttpServlet
         }
         catch (Exception e)
         {
-            for (StackTraceElement element : e.getStackTrace())
+            request.setAttribute("error", e);
+            RequestDispatcher rd = request.getRequestDispatcher(
+                    "/lesson/lesson05/member/Error.jsp");
+            rd.forward(request, response);
+          /*  for (StackTraceElement element : e.getStackTrace())
             {
                 System.out.println(element.toString());
             }
-            throw new ServletException(e);
+            throw new ServletException(e);*/
         }
         finally
         {
             try { if (stmt != null) stmt.close(); } catch(Exception e) { }
-            try { if (conn != null) conn.close(); } catch(Exception e) { }
         }
     }
 }

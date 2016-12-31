@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -31,12 +32,8 @@ public class MemberDeleteServlet extends HttpServlet
         try
         {
             ServletContext sc = this.getServletContext();
-            Class.forName(sc.getInitParameter("driver"));
+            conn = (Connection) sc.getAttribute("conn");
 
-            conn = DriverManager.getConnection(
-                    sc.getInitParameter("url"),
-                    sc.getInitParameter("username"),
-                    sc.getInitParameter("password"));
             stmt = conn.prepareStatement(
                     "delete from MEMBERS" +
                     " where MNO=?");
@@ -47,16 +44,21 @@ public class MemberDeleteServlet extends HttpServlet
         }
         catch (Exception e)
         {
+            request.setAttribute("error", e);
+            RequestDispatcher rd = request.getRequestDispatcher(
+                    "/lesson/lesson05/member/Error.jsp");
+            rd.forward(request, response);
+
+            /*
             for (StackTraceElement element : e.getStackTrace())
             {
                 System.out.println(element.toString());
             }
-            throw new ServletException(e);
+            throw new ServletException(e);*/
         }
         finally
         {
             try { if (stmt != null) stmt.close(); } catch(Exception e) {}
-            try { if (conn != null) conn.close(); } catch(Exception e) {}
         }
     }
 }

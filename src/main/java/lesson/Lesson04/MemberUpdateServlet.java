@@ -8,7 +8,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebInitParam;
@@ -16,6 +18,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import lesson.Lesson05.*;
 
 /**
  * Created by dongho on 12/28/16.
@@ -47,12 +51,8 @@ public class MemberUpdateServlet extends HttpServlet
         try
         {
             ServletContext sc = this.getServletContext();
-            Class.forName(sc.getInitParameter("driver"));
+            conn = (Connection) sc.getAttribute("conn");
 
-            conn = DriverManager.getConnection(
-                    sc.getInitParameter("url"),
-                    sc.getInitParameter("username"),
-                    sc.getInitParameter("password"));
             stmt = conn.createStatement();
 
             rs = stmt.executeQuery(
@@ -61,39 +61,35 @@ public class MemberUpdateServlet extends HttpServlet
             rs.next();
 
             response.setContentType("text/html; charset=UTF-8");
-            PrintWriter out = response.getWriter();
+            Member member = new Member().setNo(rs.getInt("MNO"))
+                            .setName(rs.getString("MNAME"))
+                            .setEmail(rs.getString("EMAIL"))
+                            .setCreatedDate(rs.getDate("CRE_DATE"));
 
-            out.println("<html><head><title>User Information</title></head>");
-            out.println("<body><h1>User Information</h1>");
-            out.println("<form action='update' method='post'>");
-            out.println("number: <input type='text' name='no' value='" +
-                        request.getParameter("no") + "' readonly><br>");
-            out.println("name: <input type='text' name='name' value='" +
-                        rs.getString("MNAME") + "'><br>");
-            out.println("email: <input type='text' name='email' value='" +
-                        rs.getString("EMAIL") + "'><br>");
-            out.println("register date: " + rs.getDate("CRE_DATE") + "<br>");
-            out.println("<input type='submit' value='save'>");
-            out.println("<input type='button' value='delete'" +
-                        " onclick=\"location.href='delete?no=" + request.getParameter("no") + "';\">");
-            out.println("<input type='button' value='cancel'" +
-                        " onclick='location.href=\"list\"'>");
-            out.println("</form>");
-            out.println("</body></html>");
+            request.setAttribute("member", member);
+
+            RequestDispatcher rd = request.getRequestDispatcher(
+                    "/lesson/lesson05/member/MemberUpdateForm.jsp");
+            rd.include(request, response);
+
         }
         catch (Exception e)
         {
+            request.setAttribute("error", e);
+            RequestDispatcher rd = request.getRequestDispatcher(
+                    "/lesson/lesson05/member/Error.jsp");
+            rd.forward(request, response);
+            /*
             for (StackTraceElement element : e.getStackTrace())
             {
                 System.out.println(element.toString());
             }
-            throw new ServletException(e);
+            throw new ServletException(e);*/
         }
         finally
         {
             try { if (rs != null) rs.close(); } catch(Exception e) {}
             try { if (stmt != null) stmt.close(); } catch(Exception e) {}
-            try { if (conn != null) conn.close(); } catch(Exception e) {}
         }
     }
 
@@ -108,12 +104,8 @@ public class MemberUpdateServlet extends HttpServlet
         try
         {
             ServletContext sc = this.getServletContext();
-            Class.forName(sc.getInitParameter("driver"));
+            conn = (Connection) sc.getAttribute("conn");
 
-            conn = DriverManager.getConnection(
-                    sc.getInitParameter("url"),
-                    sc.getInitParameter("username"),
-                    sc.getInitParameter("password"));
             stmt = conn.prepareStatement(
                     "update MEMBERS set EMAIL=?, MNAME=?, MOD_DATE=now()" +
                     " where MNO=?");
@@ -135,7 +127,6 @@ public class MemberUpdateServlet extends HttpServlet
         finally
         {
             try { if (stmt != null) stmt.close(); } catch(Exception e) {}
-            try { if (conn != null) conn.close(); } catch(Exception e) {}
         }
     }
 }
