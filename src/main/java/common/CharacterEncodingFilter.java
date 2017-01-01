@@ -1,4 +1,4 @@
-package lesson.Lesson04;
+package common;
 
 import java.io.IOException;
 
@@ -8,11 +8,9 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
-import javax.servlet.annotation.WebInitParam;
 
 /**
- * Created by dongho on 12/28/16.
+ * Created by dongho on 1/1/17.
  */
 public class CharacterEncodingFilter implements Filter
 {
@@ -26,8 +24,8 @@ public class CharacterEncodingFilter implements Filter
 
     @Override
     public void doFilter(
-        ServletRequest request, ServletResponse response, FilterChain nextFilter)
-        throws IOException, ServletException
+            ServletRequest request, ServletResponse response, FilterChain nextFilter)
+            throws IOException, ServletException
     {
         request.setCharacterEncoding(config.getInitParameter("encoding"));
         nextFilter.doFilter(request, response);
